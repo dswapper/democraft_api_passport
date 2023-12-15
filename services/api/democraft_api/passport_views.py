@@ -3,14 +3,9 @@ from .models import Passport, Marriage
 from .utils import as_dict
 
 from flask import request, abort, jsonify, Response
-from sqlalchemy.exc import IntegrityError
 from random import randint
-from typing import Tuple
 from datetime import datetime
 
-
-# TODO: change abort(400) to useful information
-# TODO: response json
 
 @app.route('/api/v1/passport', methods=['POST'])
 def post_passport() -> Response:
@@ -76,3 +71,15 @@ def get_passport_by_nickname(nickname: str) -> Response:
         filter_by(nickname=nickname).order_by(Passport.issue_date).all()
 
     return jsonify(list(map(as_dict, passports)))
+
+
+@app.route('/api/v1/passport/by_number/<string:rp_number>', methods=['DELETE'])
+def delete_passport_by_number(rp_number: str) -> Response:
+    passport = db.session.query(Passport).filter_by(rp_number=rp_number)
+    if passport.first() is not None:
+        passport.delete()
+        db.session.commit()
+    else:
+        abort(400)
+
+    return jsonify(status='complited')

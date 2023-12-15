@@ -8,4 +8,4 @@ app.config.from_object('democraft_api.config.Config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-from . import views, models
+from . import passport_views, models

@@ -1,7 +1,7 @@
 from . import app, db
 from .models import Passport, Marriage
 
-from flask import request, abort
+from flask import request, abort, jsonify, Response
 from sqlalchemy.exc import IntegrityError
 from random import randint
 from typing import Tuple
@@ -12,13 +12,13 @@ from datetime import datetime
 # TODO: response json
 
 @app.route('/api/v1/passport', methods=['POST'])
-def post_passport() -> str:
+def post_passport() -> Response:
     """
     A function that create new passport in DB
     :param: json:
            nickname: "str(64)"
            discord_tag: "str(128)"
-    :return: A str with unique 8-digit number of new passport ("mm rnd:06")
+    :return: A Response(JSON) with unique 8-digit number of new passport ("mm rnd:06")
     """
     nickname: str = ''
     discord_tag: str = ''
@@ -54,4 +54,4 @@ def post_passport() -> str:
     db.session.add(passport)
     db.session.commit()
 
-    return rp_number
+    return jsonify(rp_number=rp_number)

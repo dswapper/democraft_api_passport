@@ -9,6 +9,7 @@ from datetime import datetime
 
 
 # TODO: change abort(400) to useful information
+# TODO: response json
 
 @app.route('/api/v1/passport', methods=['POST'])
 def post_passport() -> str:

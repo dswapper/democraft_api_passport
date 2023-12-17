@@ -14,15 +14,28 @@ services:
     depends_on:
       - db
 
+  telegram:
+    build: ./services/telegram
+    restart: on-failure
+    volumes:
+      - ./services/telegram/:/usr/src/app/telegram/
+    command: python dev_run.py
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - api
+      - db
+
   db:
     image: postgres:13
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgress:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=democraft_api
+      - POSTGRES_MULTIPLE_DATABASES=democraft_api, democraft_api_telegram
       - POSTGRES_HOST=db
     ports:
       - "5432:5432"
